@@ -4,6 +4,7 @@ local btns ,lbls
 local xmenu = 560
 local yd ,yn = 50  ,210
 local yb ,yw = 390 ,480
+local width ,height  = love.graphics.getDimensions()
 
 local function reset_moves()
 	btns.undo.on = false
@@ -39,8 +40,13 @@ local function komi_change(i)
 	waiting = game.komi
 end
 
-local function black_level(i) level[black] = i end
-local function white_level(i) level[white] = i end
+local function black_level(i)
+	level[black] = i
+end
+
+local function white_level(i)
+	level[white] = i
+end
 
 
 -- Button Callbacks
@@ -55,6 +61,12 @@ local function newgame()
 	go:write('komi '..komi..'\n')
 	waiting = game.new
 end
+
+-- local function info()
+-- 	go:write('get_handicap\n')
+-- 	go:write('get_komi\n')
+-- 	waiting = game.info
+-- end
 
 local function undo()
 	walking = true
@@ -116,31 +128,33 @@ end
 function menu.init()
 	gui.size = 30
 	gui.sens = 15
-	local optboard = {min=1 ,max=19 ,num=boardsize ,change=boardsize_change}
-	local opthandi = {min=1 ,max=9  ,num=handicap  ,change=handicap_change}
-	local optkomi  = {num=komi ,inc=0.5 ,change=komi_change}
-	local optblvl  = {min=1 ,max=10 ,num=level[black]  ,change=black_level}
-	local optwlvl  = {min=1 ,max=10 ,num=level[white]  ,change=white_level}
+	local optboard = {min=1 ,max=19 ,num=boardsize    ,change=boardsize_change}
+	local opthandi = {min=1 ,max=9  ,num=handicap     ,change=handicap_change}
+	local optkomi  = {inc=0.5       ,num=komi         ,change=komi_change}
+	local optblvl  = {min=1 ,max=10 ,num=level[black] ,change=black_level}
+	local optwlvl  = {min=1 ,max=10 ,num=level[white] ,change=white_level}
 	drgs =
 	{	 gui.drag(xmenu+100 ,yd-5  ,optboard)
 		,gui.drag(xmenu+100 ,yd+45 ,opthandi)
 		,gui.drag(xmenu+100 ,yd+95 ,optkomi)
-		,gui.drag(xmenu+190 ,yb ,optblvl)
-		,gui.drag(xmenu+190 ,yw ,optwlvl)   }
+		,gui.drag(xmenu+190 ,yb    ,optblvl)
+		,gui.drag(xmenu+190 ,yw    ,optwlvl)   }
 
-	local optnew   = {text='New Game' ,tx=46 ,w=180 ,click=newgame ,on=true}
-	local optundo  = {text='Undo' ,click=undo}
-	local optredo  = {text='Redo' ,click=redo}
-	local optpass  = {text='Pass'     ,tx=70 ,w=180 ,click=pass}
-	local optblack = {w=70 ,click=black_play ,on=true}
-	local optwhite = {w=70 ,click=white_play ,on=true}
+	local optnew   = {text='New Game' ,click=newgame        ,tx=46 ,w=180}
+	local optinfo  = {text='Info'     ,click=info           ,tx=19}
+	local optpass  = {text='Pass'     ,click=pass ,on=false ,tx=70 ,w=180}
+	local optundo  = {text='Undo'     ,click=undo ,on=false}
+	local optredo  = {text='Redo'     ,click=redo ,on=false}
+	local optblack = {click=black_play}
+	local optwhite = {click=white_play}
 	btns =
 	{	 new  = gui.button(xmenu     ,yn     ,optnew)
+		-- ,info = gui.button(xmenu ,height-40 ,optinfo)
 		,undo = gui.button(xmenu     ,yn+50  ,optundo)
 		,redo = gui.button(xmenu+110 ,yn+50  ,optredo)
 		,pass = gui.button(xmenu     ,yn+100 ,optpass)
-		,blk  = gui.button(xmenu+60  ,yb ,optblack)
-		,wht  = gui.button(xmenu+60  ,yw ,optwhite)   }
+		,blk  = gui.button(xmenu+60  ,yb     ,optblack)
+		,wht  = gui.button(xmenu+60  ,yw     ,optwhite)   }
 	player_button(black ,btns.blk)
 	player_button(white ,btns.wht)
 end
@@ -177,11 +191,13 @@ function menu.draw()
 end
 
 function menu.mousepressed(x ,y)
-	for _,b in next,btns do b:mousepressed(x ,y) end
+	for _,b in next,btns do
+		if b:mousepressed(x ,y) then break end end
 end
 
 function menu.mousereleased(x ,y)
-	for _,b in next,btns do b:mousereleased(x ,y) end
+	for _,b in next,btns do
+		if b:mousereleased(x ,y) then break end end
 end
 
 menu.init()

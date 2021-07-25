@@ -9,7 +9,7 @@ local gui =
 	,ty   = 5
 	,w    = 70
 	,h    = 30
-	,on = false   }
+	,on = true   }
 
 local focus
 local lin = 1.5
@@ -139,7 +139,8 @@ local function button_mousepressed(b ,x ,y)
 	if b.on
 	and x >= b.x and x < b.xx
 	and y >= b.y and y < b.yy then
-		focus = b end
+		focus = b
+		return true end
 end
 
 local function button_mousereleased(b ,x ,y)
@@ -147,7 +148,8 @@ local function button_mousereleased(b ,x ,y)
 	and x >= b.x and x < b.xx
 	and y >= b.y and y < b.yy then
 		b.click()
-		focus = nil end
+		focus = nil
+		return true end
 end
 
 function gui.button(x ,y ,opt)
@@ -157,7 +159,6 @@ function gui.button(x ,y ,opt)
 		,y = y
 		,w = opt.w or gui.w
 		,h = opt.h or gui.h
-		,on = opt.on or gui.on
 		,text = opt.text or gui.text
 		,tx   = opt.tx   or gui.tx
 		,ty   = opt.ty   or gui.ty
@@ -167,6 +168,9 @@ function gui.button(x ,y ,opt)
 		,mousereleased = button_mousereleased   }
 	btn.xx = x + btn.w
 	btn.yy = y + btn.h
+	if opt.on ~= nil then
+	     btn.on = opt.on
+	else btn.on = gui.on end
 	return btn
 end
 

@@ -2,7 +2,7 @@ local board = {}
 
 local boardwid = 550
 local xblack ,xwhite = 150 ,350
-local tile ,stnrad ,blen ,tlen ,offx ,offy ,mx ,my ,ox ,oy
+local tile ,stnrad ,blen ,tlen ,offx ,offy ,ox ,oy
 local grid ,dots = {} ,{}
 local chars = { 'A' ,'B' ,'C' ,'D' ,'E' ,'F' ,'G' ,'H' ,'J'
                ,'K' ,'L' ,'M' ,'N' ,'O' ,'P' ,'Q' ,'R' ,'S' ,'T'
@@ -29,8 +29,6 @@ function board.init()
 
 	offx = 25
 	offy = 50
-	mx = offx % tile
-	my = offy % tile
 	ox = offx + tile
 	oy = offy + tile
 
@@ -89,10 +87,12 @@ function board.draw()
 		local x ,y = love.mouse.getPosition()
 		if  x > ox-stnrad and x < ox+tlen+stnrad
 		and y > oy-stnrad and y < oy+tlen+stnrad then
-			x = math.floor((x - mx)/tile + 0.5) * tile + mx
-			y = math.floor((y - my)/tile + 0.5) * tile + my
-			col = chars[(x-offx)/tile]
-			row = boardsize - (y-offy)/tile + 1
+			x ,y = x - offx ,y - offy
+			x = math.floor(x/tile + 0.5) * tile
+			y = math.floor(y/tile + 0.5) * tile
+			col = chars[x/tile]
+			row = boardsize - y/tile + 1
+			x ,y = x + offx ,y + offy
 			stone.x = x
 			stone.y = y
 
@@ -138,7 +138,7 @@ end
 function board.populate(s ,b)
 	for mv in string.gmatch(s ,'%S+') do
 		local c = mv:sub(1 ,1)
-		local r = tonumber(mv:sub(2))
+		local r = mv:sub(2)
 		stones[mv] =
 		{	 color = b
 			,x = offx+tile*chars[c]

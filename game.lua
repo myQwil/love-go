@@ -30,7 +30,7 @@ local function do_handicap(s)
 end
 
 function game.init(t)
-	if not enough_args(#t ,4) then
+	if not enough_args(#t ,5) then
 		return end
 
 	goversion = t[1]..' '..t[2]
@@ -66,6 +66,13 @@ function game.new(t)
 			genmove()
 		else waiting = nil end end
 end
+
+-- function game.info(t)
+-- 	if not enough_args(#t ,2) then
+-- 		return end
+-- 	response = t[1]..':'..t[2]
+-- 	waiting = nil
+-- end
 
 function game.human(t)
 	if not enough_args(#t ,1) then

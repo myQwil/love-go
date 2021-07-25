@@ -82,6 +82,7 @@ function love.load()
 	go:write('version\n')
 	go:write('boardsize '..boardsize..'\n')
 	go:write('fixed_handicap '..handicap..'\n')
+	go:write('komi '..komi..'\n')
 	love.graphics.setBackgroundColor(0.25 ,0.25 ,0.25)
 	waiting = game.init
 end
